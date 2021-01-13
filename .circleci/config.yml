@@ -1,0 +1,36 @@
+orbs:
+  azure-aks: circleci/azure-aks@0.2.1
+  kubernetes: circleci/kubernetes@0.4.0
+version: 2.1
+
+jobs:
+
+  build-push-docker-image:
+    machine: true
+    steps:
+      - checkout
+      - run: docker build --no-cache -t confiman/springboot-todolist:latest .
+      - run: echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+      - run: docker push confiman/springboot-todolist:latest
+
+  deploy-to-stage:
+    machine: true
+    steps:
+      - checkout
+      - azure-aks/update-kubeconfig-with-credentials:
+          cluster-name: modanisa
+          perform-login: true
+          resource-group: modanisa
+      - run:
+          command: |
+            curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+      - run: helm upgrade --install -f todolist-chart/values.yaml springboot-todolist todolist-chart/ -n todos --set image.tag=latest
+
+
+workflows:
+  deployment:
+    jobs:
+      - build-push-docker-image
+      - deploy-to-stage:
+          requires:
+            - build-push-docker-image
