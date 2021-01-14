@@ -18,16 +18,17 @@ public class TodoService {
         return todoRepository.findAll();
     }
 
-    public void saveTodo(Todo todo) {
-        todoRepository.save(todo);
+    public Todo saveTodo(Todo todo) {
+        return todoRepository.save(todo);
     }
 
-    public Todo getTodo(Integer id) {
-        return todoRepository.findById(id).get();
+    public Todo getTodo(int id) {
+        return todoRepository.findById(id).orElse(null);
     }
 
-    public void deleteTodo(Integer id) {
+    public Boolean deleteTodo(int id) {
         todoRepository.deleteById(id);
+        return true;
     }
 
 }

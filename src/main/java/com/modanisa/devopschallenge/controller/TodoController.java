@@ -17,9 +17,9 @@ public class TodoController {
     @Autowired
     TodoService todoService;
 
-    @GetMapping("")
-    public List<Todo> list() {
-        return todoService.listAllTodo();
+    @GetMapping
+    public ResponseEntity<List<Todo>> list() {
+        return new ResponseEntity<List<Todo>>(todoService.listAllTodo(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -31,24 +31,25 @@ public class TodoController {
             return new ResponseEntity<Todo>(HttpStatus.NOT_FOUND);
         }
     }
-    @PostMapping("/")
-    public void add(@RequestBody Todo todo) {
-        todoService.saveTodo(todo);
+    @PostMapping
+    public ResponseEntity<Todo> add(@RequestBody Todo todo) {
+        Todo user=todoService.saveTodo(todo);
+        return new ResponseEntity<Todo>(user, HttpStatus.OK);
+
     }
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@RequestBody Todo todo, @PathVariable Integer id) {
+    public ResponseEntity<Todo> update(@RequestBody Todo todo, @PathVariable Integer id) {
         try {
             Todo existTodo = todoService.getTodo(id);
-            todo.setId(id);
-            todoService.saveTodo(todo);
-            return new ResponseEntity<>(HttpStatus.OK);
+
+            return new ResponseEntity<>( todoService.saveTodo(todo),HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Integer id) {
+    public ResponseEntity<Boolean> delete(@PathVariable Integer id) {
 
-        todoService.deleteTodo(id);
+      return new  ResponseEntity<Boolean>( todoService.deleteTodo(id),HttpStatus.OK);
     }
 }

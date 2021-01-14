@@ -5,7 +5,8 @@ import javax.persistence.*;
 @Entity
 @Table(name = "todos")
 public class Todo {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String message;
     private Boolean isActive;
@@ -18,8 +19,7 @@ public class Todo {
         this.message = message;
         this.isActive = isActive;
     }
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     public int getId() {
         return id;
     }
