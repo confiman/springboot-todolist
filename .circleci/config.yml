@@ -39,8 +39,8 @@ workflows:
     jobs:
       - run-unit-test
       - build-push-docker-image:
-          - requires:
-              - run-unit-test
+          requires:
+            - run-unit-test
       - deploy-to-stage:
           requires:
             - build-push-docker-image
