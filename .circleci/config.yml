@@ -11,6 +11,12 @@ jobs:
       - checkout
       - run: mvn test
 
+  run-integration-test:
+    machine: true
+    steps:
+      - checkout
+      - run: echo 'Running Integration Tests..'
+
   build-push-docker-image:
     machine: true
     steps:
@@ -38,9 +44,11 @@ workflows:
   deployment:
     jobs:
       - run-unit-test
+      - run-integration-test
       - build-push-docker-image:
           requires:
             - run-unit-test
+            - run-integration-test
       - deploy-to-stage:
           requires:
             - build-push-docker-image
