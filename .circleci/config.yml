@@ -5,11 +5,17 @@ version: 2.1
 
 jobs:
 
+  run-unit-test:
+    machine: true
+    steps:
+      - checkout
+      - run: ./mvnw test
+
   build-push-docker-image:
     machine: true
     steps:
       - checkout
-      - run: mvn clean package
+      - run: mvn clean package -Dmaven.test.skip=true
       - run: docker build --no-cache -t confiman/springboot-todolist:latest .
       - run: echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
       - run: docker push confiman/springboot-todolist:latest
@@ -31,7 +37,10 @@ jobs:
 workflows:
   deployment:
     jobs:
-      - build-push-docker-image
+      - run-unit-test
+      - build-push-docker-image:
+          - requires:
+              - run-unit-test
       - deploy-to-stage:
           requires:
             - build-push-docker-image
