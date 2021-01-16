@@ -9,7 +9,7 @@ jobs:
     machine: true
     steps:
       - checkout
-      - run: ./mvnw test
+      - run: mvn test
 
   build-push-docker-image:
     machine: true
