@@ -19,6 +19,7 @@ spec:
     {{- end }}
       labels:
         {{- include "todolist-chart.selectorLabels" . | nindent 8 }}
+        version: {{ .Values.gitRevisionID }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
