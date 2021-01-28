@@ -6,7 +6,7 @@ import javax.persistence.*;
 @Table(name = "todos")
 public class Todo {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String message;
     private Boolean isActive;
